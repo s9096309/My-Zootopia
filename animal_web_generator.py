@@ -5,31 +5,32 @@ def load_data(file_path):
     with open(file_path, "r") as handle:
         return json.load(handle)
 
-def generate_animal_string(data):
-    """Generates a string with animal information."""
+def generate_animal_html(data):
+    """Generates HTML for animal information."""
     output = ""
     for animal in data:
+        output += '<li class="cards__item">\n'  # Start of list item
         if "name" in animal:
-            output += f"Name: {animal['name']}\n"
+            output += f"Name: {animal['name']}<br/>\n"
         if "characteristics" in animal and "diet" in animal["characteristics"]:
-            output += f"Diet: {animal['characteristics']['diet']}\n"
+            output += f"Diet: {animal['characteristics']['diet']}<br/>\n"
         if "locations" in animal and animal["locations"]:
-            output += f"Location: {animal['locations'][0]}\n"
+            output += f"Location: {animal['locations'][0]}<br/>\n"
         if "characteristics" in animal and "type" in animal["characteristics"]:
-            output += f"Type: {animal['characteristics']['type']}\n"
-        output += "\n"  # Add an extra newline for spacing between animals
+            output += f"Type: {animal['characteristics']['type']}<br/>\n"
+        output += '</li>\n'  # End of list item
     return output
 
 def create_animals_html(input_json, template_file, output_file):
     """Creates the final HTML file."""
     try:
         animals_data = load_data(input_json)
-        animal_string = generate_animal_string(animals_data)
+        animal_html = generate_animal_html(animals_data)  # Use the new function
 
         with open(template_file, "r") as file:
             template_content = file.read()
 
-        updated_content = template_content.replace("__REPLACE_ANIMALS_INFO__", animal_string)
+        updated_content = template_content.replace("__REPLACE_ANIMALS_INFO__", animal_html)
 
         with open(output_file, "w") as file:
             file.write(updated_content)
